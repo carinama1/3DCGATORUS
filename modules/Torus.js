@@ -7,10 +7,15 @@ import {
   calcMatrix,
   dotproduct,
   crossProduct,
+  mmultiply,
+  toMatrix,
+  toPoint,
   toVector,
 } from "./utils.js";
 import { drawDot, draw } from "./draw.js";
 import { RotateX, RotateY, RotateZ } from "./Rotation.js";
+const c = document.getElementById("mainCanvas");
+const ctx = c.getContext("2d");
 
 export default class Torus {
   constructor(R, r, centerDetail, circleDetail = 30, center, config) {
@@ -30,6 +35,7 @@ export default class Torus {
 
   translateTo3D = () => {
     const { VRP, VPN, VUP, COP } = this.config;
+    const { points } = this;
     // Calculate Normal
     let N = transpose(VPN);
     let length = vectorLength(N);
@@ -43,7 +49,41 @@ export default class Torus {
     const v = calcMatrix(newUp, vectorLength(newUp), "/");
     // calculate u
     const u = crossProduct(v, N);
-    // console.log(u);
+    let r = calcMatrix(transpose(VRP), -1, "*");
+    r = [[dotproduct(r, u)], [dotproduct(r, v)], [dotproduct(r, N)]];
+    // console.log(r);
+    // console.log("u", u);
+    // console.log("v", v);
+    // console.log("N", N);
+    const AWV = [
+      [u[0][0], v[0][0], N[0][0], 0],
+      [u[1][0], v[1][0], N[1][0], 0],
+      [u[2][0], v[2][0], N[2][0], 0],
+      [r[0][0], r[2][0], r[2][0], 1],
+    ];
+    const width = c.width / 2;
+    const height = c.height / 2;
+
+    const CW = [(width + -width) / 2, (height + -height) / 2, 0];
+    const DOP = [CW[0] - COP[0][0], CW[1] - COP[0][1], CW[2] - COP[0][2]];
+    const shx = -DOP[0] / DOP[2];
+    const shy = -DOP[1] / DOP[2];
+    let T3 = [
+      [1, 0, 0, 0],
+      [0, 1, 0, 0],
+      [shx, shy, 1, 0],
+      [0, 0, 0, 1],
+    ];
+    T3 = mmultiply(AWV, T3);
+    // console.log(T3);
+    // console.log(toMatrix(points[0]));
+    let temp = [];
+    points.map((point) => {
+      temp.push(toPoint(mmultiply(T3, toMatrix(point))));
+    });
+    return temp;
+    // console.log(COP);
+    // console.log(AWV);
   };
 
   area = (A, B, P) => {
@@ -53,7 +93,9 @@ export default class Torus {
     const y2 = B.y;
     const x3 = P.x;
     const y3 = P.y;
-    return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
+    return Math.abs(
+      (x1 * y2 + x2 * y3 + x3 * y1 - x1 * y3 - x2 * y1 - x3 * y2) / 2.0
+    );
   };
 
   isInside = (A, B, C, D, point) => {
@@ -78,14 +120,7 @@ export default class Torus {
       const C = transformCenter(face[2], this.center);
       const D = transformCenter(face[3], this.center);
       if (this.isInside(A, B, C, D, { x, y })) {
-        console.log(
-          "N : ",
-          this.backCulling(face, true),
-          "index : ",
-          index,
-          "totalFace : ",
-          this.faces.length
-        );
+        console.log("N : ", this.backCulling(face, true));
         this.drawShape(face, "red");
       }
     });
@@ -97,18 +132,18 @@ export default class Torus {
     for (let i = 0; i < line.length; i++) {
       for (let j = 0; j < line[i].length; j++) {
         if (i === line.length - 1 && j === line[i].length - 1) {
-          temp.push([line[0][0], line[0][j], line[i][j], line[i][0]]);
+          temp.push([line[i][0], line[i][j], line[0][j], line[0][0]]);
           break;
         } else if (i === line.length - 1) {
-          temp.push([line[0][j + 1], line[0][j], line[i][j], line[i][j + 1]]);
+          temp.push([line[i][j + 1], line[i][j], line[0][j], line[0][j + 1]]);
         } else if (j === line[i].length - 1) {
-          temp.push([line[i + 1][0], line[i + 1][j], line[i][j], line[i][0]]);
+          temp.push([line[i][0], line[i][j], line[i + 1][j], line[i + 1][0]]);
         } else {
           temp.push([
-            line[i + 1][j + 1],
-            line[i + 1][j],
-            line[i][j],
             line[i][j + 1],
+            line[i][j],
+            line[i + 1][j],
+            line[i + 1][j + 1],
           ]);
         }
       }
@@ -117,7 +152,17 @@ export default class Torus {
     this.drawFaces();
   };
 
+  transformFaceCenter = (face) => {
+    return [
+      transformCenter(face[0], this.center),
+      transformCenter(face[1], this.center),
+      transformCenter(face[2], this.center),
+      transformCenter(face[3], this.center),
+    ];
+  };
+
   backCulling = (face, value = false) => {
+    // face = this.transformFaceCenter(face);
     const AB = toVector(face[0], face[1]);
     const BC = toVector(face[1], face[2]);
     const CD = toVector(face[2], face[3]);
@@ -130,6 +175,7 @@ export default class Torus {
     //   crossProduct(DA, AB),
     // ];
     // let temp = 0;
+    // console.log(normal)
     // normal.map((val) => {
     //   val.map((v) => {
     //     temp = temp + v[0];
@@ -137,11 +183,12 @@ export default class Torus {
     // });
 
     // Product of 2
-    const normal = crossProduct(CD, DA);
+    const normal = crossProduct(AB, BC);
     let temp = 0;
-    normal.map((v) => {
-      temp = temp + v[0];
-    });
+    temp = normal[2];
+    // normal.map((v) => {
+    //   temp = temp + v[0];
+    // });
 
     if (value) {
       return temp;
@@ -154,6 +201,7 @@ export default class Torus {
 
   drawPartially = () => {
     let { faces, part, linepart, center } = this;
+
     if (part === faces.length) {
       return;
     }
@@ -164,6 +212,13 @@ export default class Torus {
       );
       this.linepart = 0;
       this.part += 1;
+
+      console.log(this.backCulling(faces[part], true));
+
+      if ((part + 1) % 20 === 0) {
+        console.clear();
+        ctx.clearRect(0, 0, c.width, c.height);
+      }
     } else {
       draw(
         transformCenter(faces[part][linepart], center),
@@ -192,7 +247,7 @@ export default class Torus {
   generateTorus = () => {
     let temp = [];
     for (let i = 0; i < this.centerDetail; i++) {
-      const long = getMap(i, 0, this.centerDetail, 0, Math.PI * 2);
+      const long = getMap(i, 0, this.centerDetail, Math.PI * 2, 0);
       let tempLine = [];
       for (let j = 0; j < this.circleDetail; j++) {
         const lat = getMap(j, 0, this.circleDetail, 0, Math.PI * 2);
@@ -209,8 +264,7 @@ export default class Torus {
     this.points = temp;
   };
 
-  generateLine = () => {
-    const { points } = this;
+  generateLine = (points) => {
     let temp = [];
     let matrices = [];
     points.map((point, index) => {
@@ -228,12 +282,13 @@ export default class Torus {
     // points.map((point) => {
     //   drawDot(transformCenter(point, this.center), this.center);
     // });
-    this.generateLine();
+    const torus = this.translateTo3D();
+    this.generateLine(torus);
     this.generateFaces();
-    this.translateTo3D();
   };
 
   drawShape = (face, style) => {
+    // console.log("s");
     draw(
       transformCenter(face[0], this.center),
       transformCenter(face[1], this.center),

@@ -12,6 +12,15 @@ export const transformCenter = (point, center) => {
   return { x: point.x + x, y: point.y + y, z: point.z + z };
 };
 
+export const toMatrix = (obj) => {
+  const { x, y, z } = obj;
+  return [[x], [y], [z], [0]];
+};
+
+export const toPoint = (arr) => {
+  return { x: arr[0][0], y: arr[1][0], z: arr[2][0] };
+};
+
 export const chunk = (arr, len) => {
   var chunks = [],
     i = 0,
@@ -69,7 +78,7 @@ const toArray = (obj) => {
 };
 
 export const crossProduct = (a, b) => {
-  if (typeof a === "object") {
+  if (!a[0] || !a[0][0]) {
     a = toArray(a);
     b = toArray(b);
   }
