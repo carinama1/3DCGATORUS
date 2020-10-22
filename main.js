@@ -10,6 +10,7 @@ import { xyz } from "./modules/utils.js";
 import Torus from "./modules/Torus.js";
 
 const rotationButton = document.getElementById("rotationButton");
+const backfaceButton = document.getElementById("backfaceButton");
 const partiallyButton = document.getElementById("partiallyButton");
 const refreshButton = document.getElementById("refreshButton");
 
@@ -26,6 +27,12 @@ const translationXSlider = document.getElementById("translateX");
 const translationYSlider = document.getElementById("translateY");
 const translationZSlider = document.getElementById("translateZ");
 
+let majorradius = document.getElementById("majorradius").value * 100;
+let minorradius = document.getElementById("minorradius").value * 100;
+
+let majordetail = document.getElementById("majordetail").value;
+let minordetail = document.getElementById("minordetail").value;
+
 if (translationXSlider) {
   translationXSlider.addEventListener("input", (e) => {
     translateX = parseFloat(e.target.value);
@@ -39,7 +46,7 @@ if (translationYSlider) {
   });
 }
 
-const config = {
+let config = {
   VRP: [[1, 0, 0]],
   VPN: [[0, 0, 1]],
   VUP: [[1, 0, 0]],
@@ -68,6 +75,18 @@ const generateFPS = () => {
 // Torus(centerRadius, circleRadius, centerDetail, circleDetail, center)
 
 // clear();
+if (backfaceButton) {
+  backfaceButton.onclick = () => {
+    const { backFaceCulling } = config;
+    let status = "";
+    if (backFaceCulling) status = '<span style="color:red;">OFF</span>';
+    else status = '<span style="color:green;">ON</span>';
+    config.backFaceCulling = !backFaceCulling;
+    backfaceButton.innerHTML = `<span style="font-weight:bold">BACK FACE CULLING IS </span> ${status}`;
+    resetTorus();
+  };
+}
+
 if (rotationButton) {
   rotationButton.onclick = () => {
     isRotating = !isRotating;
@@ -92,7 +111,7 @@ c.addEventListener(
   (e) => {
     var mousePos = getMousePos(c, e);
     MX.innerHTML = `Mouse X : ${mousePos.x}`;
-    MY.innerHTML = `Mouse Y : ${mousePos.x}`;
+    MY.innerHTML = `Mouse Y : ${mousePos.y}`;
   },
   false
 );
@@ -114,7 +133,14 @@ const getMousePos = (canvas, e) => {
   };
 };
 
-const torus1 = new Torus(100, 25, 20, 20, center(), config);
+const torus1 = new Torus(
+  majorradius,
+  minorradius,
+  majordetail,
+  minordetail,
+  center(),
+  config
+);
 
 torus1.generateTorus();
 // torus1.rotateTorusX(0);
@@ -144,11 +170,24 @@ const getConfigurationValue = () => {
   translateX = document.getElementById("translateX").value;
   translateY = document.getElementById("translateY").value;
   translateZ = document.getElementById("translateZ").value;
+
+  majorradius = document.getElementById("majorradius").value * 100;
+  minorradius = document.getElementById("minorradius").value * 100;
+
+  majordetail = document.getElementById("majordetail").value;
+  minordetail = document.getElementById("minordetail").value;
 };
 
 const resetTorus = () => {
   getConfigurationValue();
-  torus1.generateNewTorus(100, 25, 20, 20, center(), config);
+  torus1.generateNewTorus(
+    majorradius,
+    minorradius,
+    majordetail,
+    minordetail,
+    center(),
+    config
+  );
   clear();
   torus1.rotateTorusX(rotationX);
   torus1.rotateTorusY(rotationY);
