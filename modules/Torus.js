@@ -229,7 +229,8 @@ export default class Torus {
     }
   };
 
-  drawFaces = () => {
+  drawFaces = (version) => {
+    // console.log(version, this.faces[0]);
     const { backFaceCulling } = this.config;
     this.visibleFaces = [];
     this.faces.map((face) => {
@@ -295,10 +296,10 @@ export default class Torus {
     this.points = temp;
   };
 
-  generateLine = (points) => {
+  generateLine = () => {
     let temp = [];
     let matrices = [];
-    points.map((point, index) => {
+    this.points.map((point, index) => {
       matrices.push(point);
       if ((index + 1) % this.circleDetail === 0) {
         temp[(index + 1) / this.circleDetail - 1] = matrices;
@@ -308,16 +309,26 @@ export default class Torus {
     this.line = temp;
   };
 
+  drawTorusV2 = () => {
+    // console.log("1", this.points[0]);
+    // console.log("face1", this.faces[0]);
+    // console.log("line1", this.line[0]);
+    this.points = this.translateTo3D();
+    // console.log("2", this.points[0]);
+    // console.log("face2", this.faces[0]);
+    this.drawFaces("v2");
+  };
+
   drawTorus = () => {
     // points.map((point) => {
     //   drawDot(transformCenter(point, this.center), this.center);
     // });
-    const torus = this.translateTo3D();
-    this.generateLine(torus);
+    this.points = this.translateTo3D();
+    this.generateLine();
+    this.generateFaces();
     // points.map((point) => {
     //   drawDot(transformCenter(point, this.center));
     // });
-    this.generateFaces();
   };
 
   drawShape = (face, style) => {

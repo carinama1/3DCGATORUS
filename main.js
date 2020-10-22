@@ -152,6 +152,7 @@ torus1.rotateTorusX(rotationX);
 torus1.rotateTorusY(rotationY);
 torus1.rotateTorusZ(rotationZ);
 torus1.drawTorus();
+torus1.drawTorusV2();
 
 const realtimefunction = () => {
   if (isRotating) {
@@ -159,6 +160,7 @@ const realtimefunction = () => {
     torus1.rotateTorusX(rotationX / fps);
     torus1.rotateTorusY(rotationY / fps);
     torus1.rotateTorusZ(rotationZ / fps);
+    // torus1.drawTorusV2();
     torus1.drawTorus();
   }
 };
