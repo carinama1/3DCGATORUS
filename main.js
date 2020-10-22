@@ -21,7 +21,7 @@ let rotationY = document.getElementById("rotationy").value;
 let rotationZ = document.getElementById("rotationz").value;
 let translateX = document.getElementById("translateX").value;
 let translateY = document.getElementById("translateY").value;
-let translateZ = document.getElementById("translateZ").value;
+let translateZ = parseFloat(document.getElementById("translateZ").value / 10);
 
 const translationXSlider = document.getElementById("translateX");
 const translationYSlider = document.getElementById("translateY");
@@ -35,13 +35,16 @@ let minordetail = document.getElementById("minordetail").value;
 
 if (translationXSlider) {
   translationXSlider.addEventListener("input", (e) => {
-    translateX = parseFloat(e.target.value);
     resetTorus();
   });
 }
 if (translationYSlider) {
   translationYSlider.addEventListener("input", (e) => {
-    translateY = parseFloat(e.target.value);
+    resetTorus();
+  });
+}
+if (translationZSlider) {
+  translationZSlider.addEventListener("input", (e) => {
     resetTorus();
   });
 }
@@ -49,8 +52,8 @@ if (translationYSlider) {
 let config = {
   VRP: [[1, 0, 0]],
   VPN: [[0, 0, 1]],
-  VUP: [[1, 0, 0]],
-  COP: [[0, 0, 1]],
+  VUP: [[1, 0, translateZ]],
+  COP: [[0, 0, 4]],
   backFaceCulling: true,
 };
 
@@ -169,7 +172,7 @@ const getConfigurationValue = () => {
 
   translateX = document.getElementById("translateX").value;
   translateY = document.getElementById("translateY").value;
-  translateZ = document.getElementById("translateZ").value;
+  translateZ = parseFloat(document.getElementById("translateZ").value / 10);
 
   majorradius = document.getElementById("majorradius").value * 100;
   minorradius = document.getElementById("minorradius").value * 100;
@@ -180,6 +183,8 @@ const getConfigurationValue = () => {
 
 const resetTorus = () => {
   getConfigurationValue();
+  config.VUP[0][2] = translateZ;
+
   torus1.generateNewTorus(
     majorradius,
     minorradius,
