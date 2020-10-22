@@ -76,6 +76,11 @@
         <button style="margin-bottom: 10px" id="rotationButton">
           LIVE VIEW IS <span style="color: green">ON</span>
         </button>
+
+        <button style="margin-bottom: 10px" id="backfaceButton">
+          <span style="font-weight: bold">BACK FACE CULLING IS</span>
+          <span style="color: green">ON</span>
+        </button>
         <div style="margin-bottom: 20px; width: 360px; display: flex">
           <span style="font-weight: bold">SET FPS : </span>
           <div style="margin-left: auto">
@@ -93,20 +98,30 @@
         <div style="margin-bottom: 20px; width: 360px; display: flex">
           <span style="font-weight: bold">Radius [Major][Minor] : </span>
           <div style="margin-left: auto">
-            <input style="width: 50px" value="1" type="text" id="rotationx" />
+            <input style="width: 50px" value="1" type="text" id="majorradius" />
             <input
               style="width: 50px"
               value="0.25"
               type="text"
-              id="rotationy"
+              id="minorradius"
             />
           </div>
         </div>
         <div style="margin-bottom: 20px; width: 360px; display: flex">
           <span style="font-weight: bold">Detail [Major][Minor] : </span>
           <div style="margin-left: auto">
-            <input style="width: 50px" value="20" type="text" id="rotationx" />
-            <input style="width: 50px" value="20" type="text" id="rotationy" />
+            <input
+              style="width: 50px"
+              value="20"
+              type="text"
+              id="majordetail"
+            />
+            <input
+              style="width: 50px"
+              value="20"
+              type="text"
+              id="minordetail"
+            />
           </div>
         </div>
         <div style="display: flex; flex-direction: column; width: 200px">

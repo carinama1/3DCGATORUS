@@ -120,7 +120,7 @@ export default class Torus {
       const C = transformCenter(face[2], this.center);
       const D = transformCenter(face[3], this.center);
       if (this.isInside(A, B, C, D, { x, y })) {
-        console.log("N : ", this.backCulling(face, true));
+        // console.log("N : ", this.backCulling(face, true));
         this.drawShape(face, "red");
       }
     });
@@ -231,6 +231,7 @@ export default class Torus {
 
   drawFaces = () => {
     const { backFaceCulling } = this.config;
+    this.visibleFaces = [];
     this.faces.map((face) => {
       if (backFaceCulling) {
         if (this.backCulling(face)) {
@@ -255,9 +256,15 @@ export default class Torus {
     this.R = R;
     this.r = r;
     this.centerDetail = centerDetail;
-    this.circleDetail = circleDetail;
     this.center = center;
+    this.points = [];
+    this.circleDetail = circleDetail;
+    this.line = [];
+    this.faces = [];
     this.config = config;
+    this.visibleFaces = [];
+    this.part = 0;
+    this.linepart = 0;
 
     this.generateTorus();
   };
