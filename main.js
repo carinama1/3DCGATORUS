@@ -152,7 +152,7 @@ torus1.rotateTorusX(rotationX);
 torus1.rotateTorusY(rotationY);
 torus1.rotateTorusZ(rotationZ);
 torus1.drawTorus();
-torus1.drawTorusV2();
+// torus1.drawTorusV2();
 
 const realtimefunction = () => {
   if (isRotating) {

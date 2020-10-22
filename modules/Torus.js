@@ -296,10 +296,10 @@ export default class Torus {
     this.points = temp;
   };
 
-  generateLine = () => {
+  generateLine = (points) => {
     let temp = [];
     let matrices = [];
-    this.points.map((point, index) => {
+    points.map((point, index) => {
       matrices.push(point);
       if ((index + 1) % this.circleDetail === 0) {
         temp[(index + 1) / this.circleDetail - 1] = matrices;
@@ -323,8 +323,8 @@ export default class Torus {
     // points.map((point) => {
     //   drawDot(transformCenter(point, this.center), this.center);
     // });
-    this.points = this.translateTo3D();
-    this.generateLine();
+    const points = this.translateTo3D();
+    this.generateLine(points);
     this.generateFaces();
     // points.map((point) => {
     //   drawDot(transformCenter(point, this.center));
