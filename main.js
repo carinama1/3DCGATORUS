@@ -2,7 +2,7 @@ const c = document.getElementById("mainCanvas");
 const ctx = c.getContext("2d");
 const MX = document.getElementById("mouseX");
 const MY = document.getElementById("mouseY");
-let isRotating = true;
+let isRotating = false;
 let isPartiallyDrawn = false;
 // import Cube from "./modules/Cube.js";
 // import Sphere from "./modules/Sphere.js";
@@ -146,9 +146,9 @@ const torus1 = new Torus(
 );
 
 torus1.generateTorus();
-// torus1.rotateTorusX(0);
-// torus1.rotateTorusY(0);
-// torus1.rotateTorusZ(0);
+torus1.rotateTorusX(rotationX);
+torus1.rotateTorusY(rotationY);
+torus1.rotateTorusZ(rotationZ);
 torus1.drawTorus();
 
 const realtimefunction = () => {
