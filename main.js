@@ -6,61 +6,86 @@ let isRotating = true;
 let isPartiallyDrawn = false;
 // import Cube from "./modules/Cube.js";
 // import Sphere from "./modules/Sphere.js";
+import { xyz } from "./modules/utils.js";
 import Torus from "./modules/Torus.js";
 
 const rotationButton = document.getElementById("rotationButton");
 const partiallyButton = document.getElementById("partiallyButton");
+const refreshButton = document.getElementById("refreshButton");
 
-const fps = 48;
+//
+let fps = document.getElementById("fpsvalue").value;
+let rotationX = document.getElementById("rotationx").value;
+let rotationY = document.getElementById("rotationy").value;
+let rotationZ = document.getElementById("rotationz").value;
+let translateX = document.getElementById("translateX").value;
+let translateY = document.getElementById("translateY").value;
+let translateZ = document.getElementById("translateZ").value;
+
+const translationXSlider = document.getElementById("translateX");
+const translationYSlider = document.getElementById("translateY");
+const translationZSlider = document.getElementById("translateZ");
+
+if (translationXSlider) {
+  translationXSlider.addEventListener("input", (e) => {
+    translateX = parseFloat(e.target.value);
+    resetTorus();
+  });
+}
+if (translationYSlider) {
+  translationYSlider.addEventListener("input", (e) => {
+    translateY = parseFloat(e.target.value);
+    resetTorus();
+  });
+}
+
 const config = {
-  VRP: [[1, 1, 0]],
-  VPN: [[1, 1, 1]],
+  VRP: [[1, 0, 0]],
+  VPN: [[0, 0, 1]],
   VUP: [[1, 0, 0]],
-  COP: [[0, 0, 2]],
+  COP: [[0, 0, 1]],
   backFaceCulling: true,
 };
 
-const center = { x: 0, y: 0, z: 0 };
+let center = () => {
+  return xyz(
+    parseFloat(translateX),
+    -parseFloat(translateY),
+    parseFloat(translateZ)
+  );
+};
 
 const clear = () => {
   ctx.clearRect(0, 0, c.width, c.height);
 };
 
-const generateFPS = (FPS) => {
+const generateFPS = () => {
+  const FPS = document.getElementById("fpsvalue").value;
+  fps = FPS;
   return 1000 / FPS;
 };
 
 // Torus(centerRadius, circleRadius, centerDetail, circleDetail, center)
-const torus1 = new Torus(200, 40, 20, 20, center, config);
 
-torus1.generateTorus();
-// torus1.rotateTorusX(0);
-// torus1.rotateTorusY(0);
-// torus1.rotateTorusZ(0);
-torus1.drawTorus();
 // clear();
-rotationButton.onclick = () => {
-  isRotating = !isRotating;
-  isPartiallyDrawn = false;
-};
+if (rotationButton) {
+  rotationButton.onclick = () => {
+    isRotating = !isRotating;
+    let status = "";
+    if (!isRotating) status = '<span style="color:red;">OFF</span>';
+    else status = '<span style="color:green;">ON</span>';
+    rotationButton.innerHTML = `LIVE VIEW IS ${status}`;
+    isPartiallyDrawn = false;
+  };
+}
 
-partiallyButton.onclick = () => {
-  clear();
-  isRotating = false;
-  isPartiallyDrawn = true;
-};
-
-setInterval(() => {
-  if (isRotating) {
+if (partiallyButton) {
+  partiallyButton.onclick = () => {
     clear();
-    torus1.rotateTorusX(60 / fps);
-    torus1.rotateTorusY(10 / fps);
-    torus1.rotateTorusZ(10 / fps);
-    torus1.drawTorus();
-  } else if (isPartiallyDrawn) {
-    torus1.drawPartially();
-  }
-}, generateFPS(fps));
+    isRotating = false;
+    isPartiallyDrawn = true;
+  };
+}
 
 c.addEventListener(
   "mousemove",
@@ -89,6 +114,57 @@ const getMousePos = (canvas, e) => {
   };
 };
 
+const torus1 = new Torus(100, 25, 20, 20, center(), config);
+
+torus1.generateTorus();
+// torus1.rotateTorusX(0);
+// torus1.rotateTorusY(0);
+// torus1.rotateTorusZ(0);
+torus1.drawTorus();
+
+const realtimefunction = () => {
+  if (isRotating) {
+    clear();
+    torus1.rotateTorusX(rotationX / fps);
+    torus1.rotateTorusY(rotationY / fps);
+    torus1.rotateTorusZ(rotationZ / fps);
+    torus1.drawTorus();
+  }
+};
+
+let realtime = setInterval(() => {
+  realtimefunction();
+}, generateFPS());
+
+const getConfigurationValue = () => {
+  rotationX = document.getElementById("rotationx").value;
+  rotationY = document.getElementById("rotationy").value;
+  rotationZ = document.getElementById("rotationz").value;
+
+  translateX = document.getElementById("translateX").value;
+  translateY = document.getElementById("translateY").value;
+  translateZ = document.getElementById("translateZ").value;
+};
+
+const resetTorus = () => {
+  getConfigurationValue();
+  torus1.generateNewTorus(100, 25, 20, 20, center(), config);
+  clear();
+  torus1.rotateTorusX(rotationX);
+  torus1.rotateTorusY(rotationY);
+  torus1.rotateTorusZ(rotationZ);
+  torus1.drawTorus();
+};
+
+if (refreshButton) {
+  refreshButton.onclick = () => {
+    resetTorus();
+    clearInterval(realtime);
+    realtime = setInterval(() => {
+      realtimefunction();
+    }, generateFPS());
+  };
+}
 // let cube1 = new Cube(50, 50, 50, center);
 // let cube2 = new Cube(50, 50, 50, { x: -120, y: -120, z: 10 });
 // let cube3 = new Cube(50, 50, 50, { x: 120, y: 120, z: 10 });
