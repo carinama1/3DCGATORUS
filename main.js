@@ -33,6 +33,14 @@ let minorradius = document.getElementById("minorradius").value * 100;
 let majordetail = document.getElementById("majordetail").value;
 let minordetail = document.getElementById("minordetail").value;
 
+let config = {
+  VRP: [[1, 0, 0]],
+  VPN: [[0, 0, 1]],
+  VUP: [[1, 0, translateZ]],
+  COP: [[0, 0, 4]],
+  backFaceCulling: false,
+};
+
 if (translationXSlider) {
   translationXSlider.addEventListener("input", (e) => {
     resetTorus();
@@ -48,14 +56,6 @@ if (translationZSlider) {
     resetTorus();
   });
 }
-
-let config = {
-  VRP: [[1, 0, 0]],
-  VPN: [[0, 0, 1]],
-  VUP: [[1, 0, translateZ]],
-  COP: [[0, 0, 4]],
-  backFaceCulling: false,
-};
 
 let center = () => {
   return xyz(

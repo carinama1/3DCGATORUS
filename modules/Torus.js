@@ -59,7 +59,7 @@ export default class Torus {
       [u[0][0], v[0][0], N[0][0], 0],
       [u[1][0], v[1][0], N[1][0], 0],
       [u[2][0], v[2][0], N[2][0], 0],
-      [r[0][0], r[2][0], r[2][0], 1],
+      [r[0][0], r[1][0], r[2][0], 1],
     ];
     const width = c.width / 2;
     const height = c.height / 2;
