@@ -245,6 +245,12 @@ export default class Torus {
     });
   };
 
+  // toggleBackFaceCulling = (config) => {
+  //   this.config = config;
+
+  //   this.generateTorus();
+  // };
+
   generateNewTorus = (
     R,
     r,
