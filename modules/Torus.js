@@ -120,7 +120,7 @@ export default class Torus {
       const C = transformCenter(face[2], this.center);
       const D = transformCenter(face[3], this.center);
       if (this.isInside(A, B, C, D, { x, y })) {
-        // console.log("N : ", this.backCulling(face, true));
+        console.log("N : ", this.backCulling(face, true));
         this.drawShape(face, "red");
       }
     });
