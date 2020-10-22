@@ -54,7 +54,7 @@ let config = {
   VPN: [[0, 0, 1]],
   VUP: [[1, 0, translateZ]],
   COP: [[0, 0, 4]],
-  backFaceCulling: true,
+  backFaceCulling: false,
 };
 
 let center = () => {
@@ -82,8 +82,9 @@ if (backfaceButton) {
   backfaceButton.onclick = () => {
     const { backFaceCulling } = config;
     let status = "";
-    if (backFaceCulling) status = '<span style="color:red;">OFF</span>';
-    else status = '<span style="color:green;">ON</span>';
+    if (backFaceCulling)
+      status = '<span style="color:red; font-weight:bold">OFF</span>';
+    else status = '<span style="color:green; font-weight:bold">ON</span>';
     config.backFaceCulling = !backFaceCulling;
     backfaceButton.innerHTML = `<span style="font-weight:bold">BACK FACE CULLING IS </span> ${status}`;
     resetTorus();
@@ -94,8 +95,9 @@ if (rotationButton) {
   rotationButton.onclick = () => {
     isRotating = !isRotating;
     let status = "";
-    if (!isRotating) status = '<span style="color:red;">OFF</span>';
-    else status = '<span style="color:green;">ON</span>';
+    if (!isRotating)
+      status = '<span style="color:red; font-weight:bold">OFF</span>';
+    else status = '<span style="color:green; font-weight:bold">ON</span>';
     rotationButton.innerHTML = `LIVE VIEW IS ${status}`;
     isPartiallyDrawn = false;
   };
