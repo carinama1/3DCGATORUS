@@ -6,26 +6,116 @@
     <title>Document</title>
     <script type="module" src="./main.js"></script>
   </head>
-  <body>
-    <div
-      style="
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        height: 100vh;
-      "
-    >
-      <canvas
-        width="500"
-        height="500"
-        style="border: 1px solid rgba(0, 0, 0, 0.4)"
-        id="mainCanvas"
-      ></canvas>
-      <div style="margin-left: 20px">
-        <div id="mouseX">Mouse X : 0</div>
-        <div id="mouseY">Mouse Y : 0</div>
-        <button id="rotationButton">ROTATION</button>
-        <button id="partiallyButton">Partial</button>
+  <body style="padding: 40px; margin: 0">
+    <div style="display: flex; align-items: center; height: 100vh">
+      <div>
+        <span style="font-weight: bold">Translate Along Y Axis</span>
+        <input
+          style="transform: rotate(270deg); margin-left: -50px"
+          type="range"
+          min="-250"
+          max="250"
+          value="0"
+          class="slider"
+          id="translateY"
+        />
+      </div>
+      <div
+        style="
+          width: 600px;
+          height: 600px;
+          margin: 20px 40px;
+          margin-left: -2vw;
+          justify-self: flex-start;
+        "
+      >
+        <div
+          style="margin-bottom: 20px; display: flex; align-items: center"
+          class="slidecontainer"
+        >
+          <span style="font-weight: bold">Translate Along X Axis</span>
+          <input
+            type="range"
+            min="-250"
+            max="250"
+            value="0"
+            class="slider"
+            id="translateX"
+          />
+        </div>
+        <canvas
+          width="500"
+          height="500"
+          style="border: 1px solid rgba(0, 0, 0, 0.4)"
+          id="mainCanvas"
+        ></canvas>
+        <div style="display: flex; justify-content: flex-start; width: 500px">
+          <div>
+            <div id="mouseX">Mouse X : 0</div>
+            <div id="mouseY">Mouse Y : 0</div>
+          </div>
+          <div style="margin-left: auto; margin-top: 20px">
+            <div
+              style="margin-bottom: 20px; display: flex; align-items: center"
+              class="slidecontainer"
+            >
+              <span style="font-weight: bold">Translate Along Z Axis</span>
+              <input
+                type="range"
+                min="-250"
+                max="250"
+                value="0"
+                class="slider"
+                id="translateZ"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="width: 500px; height: 500px">
+        <button style="margin-bottom: 10px" id="rotationButton">
+          LIVE VIEW IS <span style="color: green">ON</span>
+        </button>
+        <div style="margin-bottom: 20px; width: 360px; display: flex">
+          <span style="font-weight: bold">SET FPS : </span>
+          <div style="margin-left: auto">
+            <input style="width: 50px" value="48" type="text" id="fpsvalue" />
+          </div>
+        </div>
+        <div style="margin-bottom: 20px; width: 360px; display: flex">
+          <span style="font-weight: bold">ROTATION : </span>
+          <div style="margin-left: auto">
+            <input style="width: 50px" value="90" type="text" id="rotationx" />
+            <input style="width: 50px" value="0" type="text" id="rotationy" />
+            <input style="width: 50px" value="0" type="text" id="rotationz" />
+          </div>
+        </div>
+        <div style="margin-bottom: 20px; width: 360px; display: flex">
+          <span style="font-weight: bold">Radius [Major][Minor] : </span>
+          <div style="margin-left: auto">
+            <input style="width: 50px" value="1" type="text" id="rotationx" />
+            <input
+              style="width: 50px"
+              value="0.25"
+              type="text"
+              id="rotationy"
+            />
+          </div>
+        </div>
+        <div style="margin-bottom: 20px; width: 360px; display: flex">
+          <span style="font-weight: bold">Detail [Major][Minor] : </span>
+          <div style="margin-left: auto">
+            <input style="width: 50px" value="20" type="text" id="rotationx" />
+            <input style="width: 50px" value="20" type="text" id="rotationy" />
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; width: 200px">
+          <button style="margin-bottom: 10px" id="refreshButton">
+            REFRESH VIEW
+          </button>
+        </div>
+
+        <!-- <button id="partiallyButton">Partial</button> -->
       </div>
     </div>
   </body>

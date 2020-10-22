@@ -213,7 +213,7 @@ export default class Torus {
       this.linepart = 0;
       this.part += 1;
 
-      console.log(this.backCulling(faces[part], true));
+      // console.log(this.backCulling(faces[part], true));
 
       if ((part + 1) % 20 === 0) {
         console.clear();
@@ -242,6 +242,24 @@ export default class Torus {
         this.drawShape(face);
       }
     });
+  };
+
+  generateNewTorus = (
+    R,
+    r,
+    centerDetail,
+    circleDetail = 30,
+    center,
+    config
+  ) => {
+    this.R = R;
+    this.r = r;
+    this.centerDetail = centerDetail;
+    this.circleDetail = circleDetail;
+    this.center = center;
+    this.config = config;
+
+    this.generateTorus();
   };
 
   generateTorus = () => {
@@ -278,12 +296,14 @@ export default class Torus {
   };
 
   drawTorus = () => {
-    // const { points } = this;
     // points.map((point) => {
     //   drawDot(transformCenter(point, this.center), this.center);
     // });
     const torus = this.translateTo3D();
     this.generateLine(torus);
+    // points.map((point) => {
+    //   drawDot(transformCenter(point, this.center));
+    // });
     this.generateFaces();
   };
 
