@@ -268,7 +268,6 @@ export default class Torus {
         temp.push(point);
         tempLine.push(point);
       }
-      this.line.push(tempLine);
     }
     this.points = temp;
   };
