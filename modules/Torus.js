@@ -257,7 +257,6 @@ export default class Torus {
     let temp = [];
     for (let i = 0; i < this.centerDetail; i++) {
       const long = getMap(i, 0, this.centerDetail, Math.PI * 2, 0);
-      let tempLine = [];
       for (let j = 0; j < this.circleDetail; j++) {
         const lat = getMap(j, 0, this.circleDetail, 0, Math.PI * 2);
         const x = (this.R + this.r * Math.cos(lat)) * Math.cos(long);
@@ -266,7 +265,6 @@ export default class Torus {
 
         const point = xyz(x, y, z);
         temp.push(point);
-        tempLine.push(point);
       }
     }
     this.points = temp;
