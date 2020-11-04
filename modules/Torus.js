@@ -161,35 +161,12 @@ export default class Torus {
     ];
   };
 
-  backCulling = (face, value = false) => {
-    // face = this.transformFaceCenter(face);
-    const AB = toVector(face[0], face[1]);
-    const BC = toVector(face[1], face[2]);
-    const CD = toVector(face[2], face[3]);
-    const DA = toVector(face[3], face[0]);
-    // Product of 4
-    // const normal = [
-    //   crossProduct(AB, BC),
-    //   crossProduct(BC, CD),
-    //   crossProduct(CD, DA),
-    //   crossProduct(DA, AB),
-    // ];
-    // let temp = 0;
-    // console.log(normal)
-    // normal.map((val) => {
-    //   val.map((v) => {
-    //     temp = temp + v[0];
-    //   });
-    // });
-
-    // Product of 2
+  backCulling = (points, value = false) => {
+    const AB = toVector(points[0], points[1]);
+    const BC = toVector(points[1], points[2]);
     const normal = crossProduct(AB, BC);
     let temp = 0;
     temp = normal[2];
-    // normal.map((v) => {
-    //   temp = temp + v[0];
-    // });
-
     if (value) {
       return temp;
     }
